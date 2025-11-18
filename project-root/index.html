@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management System</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка приложения -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1>🚀 Task Management System</h1>
+                <div class="user-menu" id="userMenu">
+                    <span class="user-greeting" id="userGreeting">Гость</span>
+                    <div class="auth-buttons">
+                        <button class="btn btn-outline" onclick="showAuthModal()">Войти</button>
+                        <button class="btn" onclick="showRegisterModal()">Регистрация</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основная навигация -->
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#dashboard" class="nav-link active" data-section="dashboard">📊 Дашборд</a></li>
+                <li><a href="#tasks" class="nav-link" data-section="tasks">📋 Задачи</a></li>
+                <li><a href="#reports" class="nav-link" data-section="reports">📈 Отчеты</a></li>
+                <li><a href="#team" class="nav-link" data-section="team">👥 Команда</a></li>
+            </ul>
+        </nav>
+
+        <!-- Основное содержимое -->
+        <main class="main-content">
+            <!-- Секция Дашборд -->
+            <section id="dashboard" class="content-section active">
+                <div class="dashboard-header">
+                    <h2>Обзор проектов</h2>
+                    <div class="quick-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" id="totalTasks">0</div>
+                            <div class="stat-label">Всего задач</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="completedTasks">0</div>
+                            <div class="stat-label">Завершено</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="inProgressTasks">0</div>
+                            <div class="stat-label">В работе</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="overdueTasks">0</div>
+                            <div class="stat-label">Просрочено</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Ближайшие дедлайны -->
+                    <div class="dashboard-card">
+                        <h3>⏰ Ближайшие дедлайны</h3>
+                        <div class="deadline-list" id="deadlineList">
+                            <!-- Список дедлайнов будет здесь -->
+                        </div>
+                    </div>
+
+                    <!-- Быстрые действия -->
+                    <div class="dashboard-card">
+                        <h3>⚡ Быстрые действия</h3>
+                        <div class="quick-actions">
+                            <button class="action-btn" onclick="showSection('tasks')">
+                                <span class="action-icon">➕</span>
+                                <span>Создать задачу</span>
+                            </button>
+                            <button class="action-btn" onclick="generateQuickReport()">
+                                <span class="action-icon">📊</span>
+                                <span>Быстрый отчет</span>
+                            </button>
+                            <button class="action-btn" onclick="showTeamModal()">
+                                <span class="action-icon">👥</span>
+                                <span>Управление командой</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Активность -->
+                    <div class="dashboard-card">
+                        <h3>📝 Последняя активность</h3>
+                        <div class="activity-feed" id="activityFeed">
+                            <!-- Лента активности будет здесь -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Секция Задачи -->
+            <section id="tasks" class="content-section">
+                <div class="section-header">
+                    <h2>Управление задачами</h2>
+                    <button class="btn" onclick="showCreateTaskModal()">➕ Новая задача</button>
+                </div>
+
+                <!-- Фильтры и поиск -->
+                <div class="filters-card">
+                    <div class="filter-row">
+                        <input type="text" id="taskSearch" placeholder="🔍 Поиск задач..." class="search-input">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">Все статусы</option>
+                            <option value="pending">В ожидании</option>
+                            <option value="in-progress">В работе</option>
+                            <option value="completed">Завершено</option>
+                        </select>
+                        <select id="priorityFilter" class="filter-select">
+                            <option value="">Все приоритеты</option>
+                            <option value="high">Высокий</option>
+                            <option value="medium">Средний</option>
+                            <option value="low">Низкий</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="applyTaskFilters()">Применить</button>
+                        <button class="btn btn-outline" onclick="resetTaskFilters()">Сбросить</button>
+                    </div>
+                </div>
+
+                <!-- Список задач -->
+                <div class="tasks-container">
+                    <div class="tasks-column">
+                        <h3>📥 В ожидании</h3>
+                        <div class="tasks-list" id="pendingTasks" data-status="pending">
+                            <!-- Задачи в ожидании -->
+                        </div>
+                    </div>
+                    <div class="tasks-column">
+                        <h3>🔄 В работе</h3>
+                        <div class="tasks-list" id="inProgressTasks" data-status="in-progress">
+                            <!-- Задачи в работе -->
+                        </div>
+                    </div>
+                    <div class="tasks-column">
+                        <h3>✅ Завершено</h3>
+                        <div class="tasks-list" id="completedTasks" data-status="completed">
+                            <!-- Завершенные задачи -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Секция Отчеты -->
+            <section id="reports" class="content-section">
+                <div class="section-header">
+                    <h2>Отчетность и аналитика</h2>
+                    <div class="report-actions">
+                        <button class="btn" onclick="generateReport('weekly')">📅 Недельный отчет</button>
+                        <button class="btn btn-success" onclick="showExportModal()">📤 Экспорт данных</button>
+                    </div>
+                </div>
+
+                <!-- Статистика -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="totalTasksCount">0</div>
+                            <div class="stat-label">Всего задач</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="completionRate">0%</div>
+                            <div class="stat-label">Процент выполнения</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="avgCompletion">0д</div>
+                            <div class="stat-label">Среднее время выполнения</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="productivityScore">0</div>
+                            <div class="stat-label">Продуктивность</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Графики и визуализация -->
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <h3>Распределение задач по статусам</h3>
+                        <div class="chart-placeholder">
+                            <div class="chart-bars">
+                                <div class="bar pending-bar" style="height: 60%"></div>
+                                <div class="bar progress-bar" style="height: 30%"></div>
+                                <div class="bar completed-bar" style="height: 45%"></div>
+                            </div>
+                            <div class="chart-legend">
+                                <span class="legend-item pending">В ожидании</span>
+                                <span class="legend-item progress">В работе</span>
+                                <span class="legend-item completed">Завершено</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3>Прогресс за неделю</h3>
+                        <div class="chart-placeholder">
+                            <div class="line-chart">
+                                <div class="chart-line" style="height: 80%"></div>
+                                <div class="chart-points">
+                                    <div class="point" style="left: 10%"></div>
+                                    <div class="point" style="left: 30%"></div>
+                                    <div class="point" style="left: 50%"></div>
+                                    <div class="point" style="left: 70%"></div>
+                                    <div class="point" style="left: 90%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Генерация отчетов -->
+                <div class="reports-card">
+                    <h3>Генерация отчетов</h3>
+                    <div class="report-options">
+                        <div class="report-option">
+                            <label>
+                                <input type="radio" name="reportType" value="detailed" checked>
+                                <span class="radio-label">Детальный отчет</span>
+                            </label>
+                        </div>
+                        <div class="report-option">
+                            <label>
+                                <input type="radio" name="reportType" value="summary">
+                                <span class="radio-label">Сводный отчет</span>
+                            </label>
+                        </div>
+                        <div class="report-option">
+                            <label>
+                                <input type="radio" name="reportType" value="performance">
+                                <span class="radio-label">Отчет по продуктивности</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-large" onclick="generateDetailedReport()">🎯 Сгенерировать отчет</button>
+                </div>
+            </section>
+
+            <!-- Секция Команда -->
+            <section id="team" class="content-section">
+                <div class="section-header">
+                    <h2>Управление командой</h2>
+                    <button class="btn" onclick="showInviteModal()">👤 Пригласить участника</button>
+                </div>
+
+                <div class="team-grid">
+                    <!-- Участники команды -->
+                    <div class="team-card">
+                        <h3>👥 Участники команды</h3>
+                        <div class="members-list" id="teamMembers">
+                            <!-- Список участников -->
+                        </div>
+                    </div>
+
+                    <!-- Роли и права -->
+                    <div class="team-card">
+                        <h3>🎭 Роли и права</h3>
+                        <div class="roles-list">
+                            <div class="role-item">
+                                <span class="role-name">Администратор</span>
+                                <span class="role-badge">Полный доступ</span>
+                            </div>
+                            <div class="role-item">
+                                <span class="role-name">Менеджер</span>
+                                <span class="role-badge">Управление задачами</span>
+                            </div>
+                            <div class="role-item">
+                                <span class="role-name">Разработчик</span>
+                                <span class="role-badge">Просмотр и выполнение</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Модальные окна -->
+    <!-- Модальное окно аутентификации -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <h2>Вход в систему</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-large">Войти</button>
+            </form>
+            <p class="auth-switch">
+                Нет аккаунта? <a href="#" onclick="showRegisterModal()">Зарегистрироваться</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Модальное окно регистрации -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRegisterModal()">&times;</span>
+            <h2>Регистрация</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Имя:</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <button type="submit" class="btn btn-large">Зарегистрироваться</button>
+            </form>
+            <p class="auth-switch">
+                Уже есть аккаунт? <a href="#" onclick="showAuthModal()">Войти</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Модальное окно создания задачи -->
+    <div id="createTaskModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreateTaskModal()">&times;</span>
+            <h2>Создание новой задачи</h2>
+            <form id="createTaskForm">
+                <div class="form-group">
+                    <label>Название задачи:</label>
+                    <input type="text" id="taskTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Описание:</label>
+                    <textarea id="taskDescription" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Приоритет:</label>
+                        <select id="taskPriority">
+                            <option value="low">Низкий</option>
+                            <option value="medium">Средний</option>
+                            <option value="high">Высокий</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Срок выполнения:</label>
+                        <input type="date" id="taskDeadline">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeCreateTaskModal()">Отмена</button>
+                    <button type="submit" class="btn">Создать задачу</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
